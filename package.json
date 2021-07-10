@@ -1,6 +1,6 @@
 {
   "name": "@tinyhttp/markdown",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "type": "module",
   "description": "Static markdown middleware for Node.js.",
   "homepage": "https://github.com/tinyhttp/markdown#readme",
