@@ -20,7 +20,7 @@ const sendStream = async (
   req: Request,
   res: Response,
   caching: Caching | false
-) => {
+): Promise<void> => {
   const file = await readFile(path)
 
   if (caching) enableCaching(res, caching)
@@ -31,15 +31,15 @@ const sendStream = async (
 }
 
 export const markdownStaticHandler =
-  (dir?: string, opts: MarkdownServerHandlerOptions = {}) =>
+  (dir: string = process.cwd(), opts: MarkdownServerHandlerOptions = {}) =>
   async <Req extends Request = Request, Res extends Response = Response>(
     req: Req,
     res: Res,
     next: (err?: any) => void
-  ) => {
-    const { prefix = '/', stripExtension = true, markedOptions = null, caching = false } = opts
+  ): Promise<void> => {
+    const { prefix = '/', stripExtension = true, markedOptions = {}, caching = false } = opts
 
-    const url = req.originalUrl || req.url
+    const url = (req.originalUrl || req.url) as string
 
     const urlMatchesPrefix = url.startsWith(prefix)
 
@@ -52,7 +52,7 @@ export const markdownStaticHandler =
     try {
       files = await readdir(fullPath)
 
-      let filename: string
+      let filename: string | undefined
 
       if (url === prefix) {
         const rgx = /(index|readme).(md|markdown)/i
